@@ -33,9 +33,7 @@ var VideoView = require('./videoView');
 
 var OoyalaSkin = React.createClass({
 
-  // note/todo: some of these are more like props, expected to be over-ridden/updated
-  // by the native bridge, and others are used purely on the non-native side.
-  // consider using a leading underscore, or something?
+  // rct_ naming means it is only kept on the react side of the bridge.
   getInitialState() {
     return {
       screenType: SCREEN_TYPES.START_SCREEN,
@@ -45,39 +43,44 @@ var OoyalaSkin = React.createClass({
       playhead: 0,
       duration: 1,
       rate: 0,
-      // things which default to null and thus don't have to be stated:
+      // things which default to 'falsy' and thus don't have to be stated:
       // rct_closedCaptionsLanguage: null,
-      // availableClosedCaptionsLanguages: null,
+      // showClosedCaptionsButton: false,
+      // availableClosedCaptionsLanguages: false,
       // captionJSON: null,
     };
   },
 
-  cchack: function(n) {
-    // todo: remove this testing hack and do it right...
-    if( n === BUTTON_NAMES.CLOSED_CAPTIONS ) {
-      if( this.state.availableClosedCaptionsLanguages ) {
-        var ccl = (this.state.rct_closedCaptionsLanguage ? null : this.state.availableClosedCaptionsLanguages[0]);
-        this.setState({rct_closedCaptionsLanguage: ccl});
-      }
+  handleClosedCaptionsButtonPress: function(n) {
+    var consume = n === BUTTON_NAMES.CLOSED_CAPTIONS;
+    if( consume ) {
+      eventBridge.onAvailableClosedCaptionLanguagesRequest();
     }
-    // todo: ...remove this testing hack and do it right.
+    return consume;
   },
 
   handlePress: function(n) {
-    this.cchack(n); // todo: remove this testing hack and do it right.
-    eventBridge.onPress({name:n});
+    if( ! this.handleClosedCaptionsButtonPress(n) ) {
+      eventBridge.onPress({name:n});
+    }
   },
 
   handleScrub: function(value) {
     eventBridge.onScrub({percentage:value});
   },
 
-  updateClosedCaptions: function() {
-    eventBridge.onClosedCaptionUpdateRequested( {language:this.state.rct_closedCaptionsLanguage} );
-  },
-
   onClosedCaptionUpdate: function(e) {
     this.setState( {captionJSON: e} );
+  },
+
+  onAvailableClosedCaptionLanguages : function(e) {
+    this.setState( {availableClosedCaptionsLanguages: e.languages} );
+    if( e.languages ) {
+      // todo: remove this testing hack and do it right...
+      var ccl = (this.state.rct_closedCaptionsLanguage ? null : e.languages[0]);
+      this.setState({rct_closedCaptionsLanguage: ccl});
+      // todo: ...remove this testing hack and do it right.
+    }
   },
 
   handleEmbedCode: function(code) {
@@ -93,9 +96,13 @@ var OoyalaSkin = React.createClass({
       playhead: e.playhead,
       duration: e.duration,
       rate: e.rate,
-      availableClosedCaptionsLanguages: e.availableClosedCaptionsLanguages,
+      showClosedCaptionsButton: e.showClosedCaptionsButton,
     });
     this.updateClosedCaptions();
+  },
+
+  updateClosedCaptions: function() {
+    eventBridge.onClosedCaptionUpdateRequested( {language:this.state.rct_closedCaptionsLanguage} );
   },
 
   onCurrentItemChange: function(e) {
@@ -134,6 +141,7 @@ var OoyalaSkin = React.createClass({
       [ 'stateChanged',             (event) => this.onStateChange(event) ],
       [ 'discoveryResultsReceived', (event) => this.onDiscoveryResult(event) ],
       [ 'onClosedCaptionUpdate',    (event) => this.onClosedCaptionUpdate(event) ],
+      [ 'onAvailableClosedCaptionLanguages', (event) => this.onAvailableClosedCaptionLanguages(event) ],
     ];
     for( var d of listenerDefinitions ) {
       this.listeners.push( DeviceEventEmitter.addListener( d[0], d[1] ) );
@@ -212,8 +220,7 @@ var OoyalaSkin = React.createClass({
          onPress={(value) => this.handlePress(value)}
          onScrub={(value) => this.handleScrub(value)}
          closedCaptionsLanguage={this.state.rct_closedCaptionsLanguage}
-             // todo: change to boolean showCCButton.
-         availableClosedCaptionsLanguages={this.state.availableClosedCaptionsLanguages}
+         showClosedCaptionsButton={this.state.showClosedCaptionsButton}
          captionJSON={this.state.captionJSON}
          onDiscoveryRow={(code) => this.handleEmbedCode(code)}>
        </VideoView>

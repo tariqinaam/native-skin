@@ -38,7 +38,7 @@ var VideoView = React.createClass({
     onPress: React.PropTypes.func,
     onScrub: React.PropTypes.func,
     closedCaptionsLanguage: React.PropTypes.string,
-    availableClosedCaptionsLanguages: React.PropTypes.array,
+    showClosedCaptionsButton: React.PropTypes.bool,
     captionJSON: React.PropTypes.object,
     onDiscoveryRow: React.PropTypes.func,
   },
@@ -96,9 +96,6 @@ var VideoView = React.createClass({
       width={this.props.width}
       onScrub={(value)=>this.handleScrub(value)} />);
 
-    var shouldShowClosedCaptionsButton =
-      this.props.availableClosedCaptionsLanguages &&
-      this.props.availableClosedCaptionsLanguages.length > 0;
     var controlBar = (<ControlBar
       ref='controlBar' 
       showPlay={this.props.showPlay} 
@@ -106,7 +103,7 @@ var VideoView = React.createClass({
       duration={this.props.duration}
       primaryActionButton = {this.props.showPlay? ICONS.PLAY: ICONS.PAUSE}
       onPress={(name) => this.handlePress(name)}
-      showClosedCaptionsButton={shouldShowClosedCaptionsButton} />);
+      showClosedCaptionsButton={this.props.showClosedCaptionsButton} />);
 
     var ccOverlayHeight = windowSize.height - 60;
     var ccOpacity = this.props.closedCaptionsLanguage ? 1 : 0;

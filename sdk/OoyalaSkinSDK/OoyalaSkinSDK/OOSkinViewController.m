@@ -106,7 +106,7 @@ static NSString *kViewChangeKey = @"frame";
   @{@"duration":durationNumber,
     @"playhead":playheadNumber,
     @"rate":rateNumber,
-    @"availableClosedCaptionsLanguages":self.player.availableClosedCaptionsLanguages};
+    @"showClosedCaptionsButton":[NSNumber numberWithBool:([self.player.availableClosedCaptionsLanguages count]>0)]};
   [OOReactBridge sendDeviceEventWithName:notification.name body:eventBody];
 }
 

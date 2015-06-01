@@ -82,6 +82,20 @@ RCT_EXPORT_METHOD(onClosedCaptionUpdateRequested:(NSDictionary *)parameters) {
   });
 }
 
+RCT_EXPORT_METHOD(onAvailableClosedCaptionLanguagesRequest) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSString *eventName = @"onAvailableClosedCaptionLanguages";
+    NSDictionary *body = nil;
+    if (self.player.currentItem.hasClosedCaptions) {
+      NSArray *languages = self.player.availableClosedCaptionsLanguages;
+      if( languages && [languages count] > 0 ) {
+        body = @{ @"languages": languages };
+      }
+    }
+    [OOReactBridge sendDeviceEventWithName:eventName body:body];
+  });
+}
+
 -(void) handlePlayPause {
   if (_player.state == OOOoyalaPlayerStatePlaying) {
     [_player pause];
