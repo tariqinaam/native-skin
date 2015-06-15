@@ -67,6 +67,10 @@ var ControlBar = React.createClass({
   },
 
   render: function() {
+    if ( ! this.props.isShow ) {
+      return null;
+    }
+
     var volumeIcon = this.state.showVolume ? ICONS.VOLUMEUP : ICONS.VOLUMEDOWN;
     var shareIcon = ICONS.SHARE;
     var menuIcon = ICONS.ELLIPSIS;
@@ -86,38 +90,30 @@ var ControlBar = React.createClass({
                   </TouchableHighlight>);
     }
 
-    if (this.props.isShow){
-      controlBarView = (
-        <View style={styles.container}>
-          <TouchableHighlight onPress={this.onPlayPausePress}>
-            <Text style={styles.icon}>{this.props.primaryActionButton}</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.onVolumePress}>
-            <Text style={this.state.showVolume ? [styles.icon, styles.iconHighlighted] : styles.icon}>
-              {volumeIcon}
-            </Text>
-          </TouchableHighlight>
-            {volumeScrubber}
-          <Text style={styles.label}>{playheadString}/{durationString}</Text>
-          <View style={styles.placeholder} />
-          <TouchableHighlight onPress={this.onSocialSharePress}>
-            <Text style={styles.icon}>{shareIcon}</Text>
-          </TouchableHighlight>
-          {ccButton}
-          <TouchableHighlight onPress={this.onFullscreenPress}>
-            <Text style={styles.icon}>{this.props.fullscreenButton}</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.onMorePress}>
-            <Text style={styles.icon}>{menuIcon}</Text>
-          </TouchableHighlight>
-      </View>
-      );
-    }
-    
     return (
-      <View>
-        {controlBarView}
-      </View>
+      <View style={styles.container}>
+        <TouchableHighlight onPress={this.onPlayPausePress}>
+          <Text style={styles.icon}>{this.props.primaryActionButton}</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.onVolumePress}>
+          <Text style={this.state.showVolume ? [styles.icon, styles.iconHighlighted] : styles.icon}>
+            {volumeIcon}
+          </Text>
+        </TouchableHighlight>
+          {volumeScrubber}
+        <Text style={styles.label}>{playheadString}/{durationString}</Text>
+        <View style={styles.placeholder} />
+        <TouchableHighlight onPress={this.onSocialSharePress}>
+          <Text style={styles.icon}>{shareIcon}</Text>
+        </TouchableHighlight>
+        {ccButton}
+        <TouchableHighlight onPress={this.onFullscreenPress}>
+          <Text style={styles.icon}>{this.props.fullscreenButton}</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.onMorePress}>
+          <Text style={styles.icon}>{menuIcon}</Text>
+        </TouchableHighlight>
+    </View>
     );
   }
 });
