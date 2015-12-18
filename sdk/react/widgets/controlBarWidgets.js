@@ -13,6 +13,7 @@ var {
   TouchableHighlight
 } = React;
 var VolumeView = require('./VolumeView');
+var Circle = require('./Circle');
 var Log = require('../log');
 
 var Constants = require('./../constants');
@@ -61,13 +62,27 @@ var controlBarWidget = React.createClass({
   },
 
   timeDurationWidget: function (options) {
+    var liveIcon = null;
+    if (options.live) {
+      liveIcon = (<Circle
+        style={options.liveIconStyle} />);
+    }
+
     if (options.onPress) {
       return (
         <TouchableHighlight onPress={options.onPress}>
           <Text style={options.style}>{options.durationString}</Text>
-        </TouchableHighlight>);
+        </TouchableHighlight>
+      );
     } else {
-      return (<Text style={options.style}>{options.durationString}</Text>);
+      return (
+        <View style={{
+          flexDirection: 'row'
+        }}>
+          {liveIcon}
+          <Text style={options.style}>{options.durationString}</Text>
+        </View>
+      );
     }
 
   },

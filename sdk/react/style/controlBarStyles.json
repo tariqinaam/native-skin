@@ -42,5 +42,11 @@
     "alignItems": "center",
     "backgroundColor": "transparent",
     "margin": 10
+  },
+  "liveCircleIcon": {
+    "width": 10,
+    "height": 10,
+    "borderRadius": 10*0.5,
+    "alignSelf": "center",
   }
 }

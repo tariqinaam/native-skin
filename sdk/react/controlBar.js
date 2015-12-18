@@ -118,6 +118,8 @@ var ControlBar = React.createClass({
         scrubberStyle: styles.volumeSlider
       },
       timeDuration: {
+        live: this.props.live? true : false,
+        liveIconStyle: [styles.liveCircleIcon, {"backgroundColor": "blue"}],
         onPress: this.props.live ? this.props.live.onGoLive : null,
         style: [styles.label, {"fontSize": labelFontSize}],
         durationString: this.getDurationString()
