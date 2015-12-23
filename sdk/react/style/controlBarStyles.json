@@ -48,5 +48,13 @@
     "height": 10,
     "borderRadius": 10*0.5,
     "alignSelf": "center",
+  },
+  "goLiveButton": {
+    "height": 25,
+    "borderRadius": 2,
+    "backgroundColor": "rgba(255,255,255,0.7)",
+    "alignSelf": "center",
+    "flex": 1,
+    "justifyContent": "center",
   }
 }

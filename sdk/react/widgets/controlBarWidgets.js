@@ -70,15 +70,15 @@ var controlBarWidget = React.createClass({
 
     if (options.onPress) {
       return (
-        <TouchableHighlight onPress={options.onPress}>
-          <Text style={options.style}>{options.durationString}</Text>
-        </TouchableHighlight>
+        <View style={options.goLiveStyle}>
+          <TouchableHighlight onPress={options.onPress}>
+            <Text style={[options.style, {color: 'black'}]}>{options.durationString}</Text>
+          </TouchableHighlight>
+        </View>
       );
     } else {
       return (
-        <View style={{
-          flexDirection: 'row'
-        }}>
+        <View style={{flexDirection: 'row'}}>
           {liveIcon}
           <Text style={options.style}>{options.durationString}</Text>
         </View>

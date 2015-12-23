@@ -119,9 +119,10 @@ var ControlBar = React.createClass({
       },
       timeDuration: {
         live: this.props.live? true : false,
-        liveIconStyle: [styles.liveCircleIcon, {"backgroundColor": "blue"}],
+        liveIconStyle: [styles.liveCircleIcon, {"backgroundColor": "red"}],
         onPress: this.props.live ? this.props.live.onGoLive : null,
         style: [styles.label, {"fontSize": labelFontSize}],
+        goLiveStyle: styles.goLiveButton,
         durationString: this.getDurationString()
       },
       fullscreen: {
