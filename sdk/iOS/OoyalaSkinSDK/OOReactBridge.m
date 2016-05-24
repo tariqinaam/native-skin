@@ -32,6 +32,7 @@ static NSString *embedCodeKey = @"embedCode";
 static NSString *percentageKey = @"percentage";
 static NSString *playPauseButtonName = @"PlayPause";
 static NSString *playButtonName = @"Play";
+static NSString *rewindButtonName = @"rewind";
 static NSString *socialShareButtonName = @"SocialShare";
 static NSString *fullscreenButtonName = @"Fullscreen";
 static NSString *learnMoreButtonName = @"LearnMore";
@@ -60,6 +61,8 @@ RCT_EXPORT_METHOD(onPress:(NSDictionary *)parameters) {
       [self handlePlayPause];
     } else if([buttonName isEqualToString:playButtonName]) {
       [self handlePlay];
+    } else if([buttonName isEqualToString:rewindButtonName]) {
+      [self handleRewind];
     } else if([buttonName isEqualToString:socialShareButtonName]) {
       [self handleSocialShare];
     } else if([buttonName isEqualToString:fullscreenButtonName]) {
@@ -101,6 +104,20 @@ RCT_EXPORT_METHOD(onPress:(NSDictionary *)parameters) {
 
 -(void) handlePlay {
   [sharedController.player play];
+}
+
+-(void) handleRewind {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    OOOoyalaPlayer *player = sharedController.player;
+    if (player) {
+      Float64 playheadTime = player.playheadTime;
+      Float64 seekBackTo = playheadTime-10;
+      if (player.seekableTimeRange.start.value > seekBackTo ) {
+        seekBackTo = 0;
+      }
+      [player seek:seekBackTo];
+    }
+  });
 }
 
 -(void) handleSocialShare {
