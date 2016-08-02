@@ -246,7 +246,7 @@ OoyalaSkinBridgeListener.prototype.onVolumeChanged = function(e) {
 
 OoyalaSkinBridgeListener.prototype.onControllerKeyPressed = function(e) {
   Log.log("Controller event received");
-  this.core.handleControlsTouch();
+  this.core.handleControlsTouch(e);
 };
 
 module.exports = OoyalaSkinBridgeListener;

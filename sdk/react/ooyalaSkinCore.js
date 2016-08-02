@@ -105,6 +105,12 @@ OoyalaSkinCore.prototype.handlePress = function(n) {
     case BUTTON_NAMES.QUALITY:
     case BUTTON_NAMES.SETTING:
       break;
+    case 19:
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+      break;
     default:
       this.bridge.onPress({name:n});
       break;
@@ -147,15 +153,18 @@ OoyalaSkinCore.prototype.handleVideoTouch = function(event) {
     Log.verbose("handleVideoTouch - Time Zeroed");
     this.skin.setState({lastPressedTime: new Date(0)})
   }
-}
+},
 
 /*
  * Hard reset lastPressedTime, either due to button press or otherwise
  */
-OoyalaSkinCore.prototype.handleControlsTouch = function() {
+OoyalaSkinCore.prototype.handleControlsTouch = function(e) {
   Log.verbose("handleControlsTouch - Time reset");
   this.skin.setState({lastPressedTime: new Date().getTime()});
-}
+  if(null != e) {
+    this.handlePress(e.buttonPressed);
+  }
+},
 
 
 OoyalaSkinCore.prototype.pushToOverlayStackAndMaybePause = function(overlay) {

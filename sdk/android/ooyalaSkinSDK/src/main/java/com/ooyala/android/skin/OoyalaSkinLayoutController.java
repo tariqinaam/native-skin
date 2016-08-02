@@ -335,14 +335,18 @@ public class OoyalaSkinLayoutController implements LayoutController, OoyalaSkinL
   }
 
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    sendEvent(CONTROLLER_KEY_PRESS_EVENT, null);
+    WritableMap arguments = Arguments.createMap();
     switch (keyCode) {
       case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+      case KeyEvent.KEYCODE_DPAD_CENTER:
         if(_player.isPlaying()) {
           _player.pause();
         } else {
           _player.play();
         }
+        break;
+      case KeyEvent.KEYCODE_MENU:
+        arguments.putString("buttonPressed","More");
         break;
       case KeyEvent.KEYCODE_MEDIA_REWIND:
         _player.seek(_player.getPlayheadTime() - 10000); // << -10sec
@@ -350,7 +354,27 @@ public class OoyalaSkinLayoutController implements LayoutController, OoyalaSkinL
       case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
         _player.seek(_player.getPlayheadTime() + 10000); // >> +10sec
         break;
+      case KeyEvent.KEYCODE_BACK:
+        if (_reactInstanceManager != null) {
+          _reactInstanceManager.onBackPressed();
+        }
+        break;
+      case KeyEvent.KEYCODE_DPAD_UP:
+        arguments.putInt("buttonPressed",KeyEvent.KEYCODE_DPAD_UP);
+        break;
+      case KeyEvent.KEYCODE_DPAD_DOWN:
+        arguments.putInt("buttonPressed",KeyEvent.KEYCODE_DPAD_DOWN);
+        break;
+      case KeyEvent.KEYCODE_DPAD_LEFT:
+        arguments.putInt("buttonPressed",KeyEvent.KEYCODE_DPAD_LEFT);
+        break;
+      case KeyEvent.KEYCODE_DPAD_RIGHT:
+        arguments.putInt("buttonPressed",KeyEvent.KEYCODE_DPAD_RIGHT);
+        break;
+      default:
+        System.out.println("key code i received now is "+keyCode);
     }
+    sendEvent(CONTROLLER_KEY_PRESS_EVENT, arguments);
     return false;
   }
 
