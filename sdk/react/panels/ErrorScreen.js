@@ -8,6 +8,16 @@ import {
 var Log = require('../log');
 var Utils = require('../utils');
 var styles = Utils.getStyles(require('./style/errorScreenStyles.json'));
+var I18n = require('react-native-i18n');   
+
+/*  Supposedly this is recommended .....
+* I18n.fallbacks = true;
+*/
+
+I18n.translations = {
+  en: require('./en.json'),
+  es: require('./es.json'),
+};
 
 var ErrorScreen = React.createClass({
   propTypes: {
