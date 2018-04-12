@@ -717,7 +717,9 @@ public class OoyalaSkinLayoutController extends Observable implements LayoutCont
     }
   }
 
-
+public static String getText(){
+    return OoyalaPlayer.getText();
+}
   @Override
   protected void finalize() throws Throwable {
     DebugMode.logV(TAG, "OoyalaSkinLayoutController Finalized");
