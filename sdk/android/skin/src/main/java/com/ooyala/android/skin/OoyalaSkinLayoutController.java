@@ -718,7 +718,7 @@ public class OoyalaSkinLayoutController extends Observable implements LayoutCont
   }
 
 public static String getText(){
-    return OoyalaPlayer.getText();
+    return "text from skin sdk";
 }
   @Override
   protected void finalize() throws Throwable {
