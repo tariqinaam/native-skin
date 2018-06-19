@@ -39,6 +39,8 @@ var BUTTON_NAMES = { // must match Objective-C code expectations & skin.json.
   AD_OVERLAY: 'Overlay',
   PIP: 'PIP',
   UP_NEXT: 'Select up next',
+  SKIP_BACKWARD: 'Skip Backward',
+  SKIP_FORWARD: 'Skip Forward'
 };
 
 var VIEW_NAMES = {

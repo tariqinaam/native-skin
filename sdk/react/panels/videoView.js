@@ -281,7 +281,13 @@ var VideoView = React.createClass({
           rate={this.props.rate}
           playing={this.props.playing}
           loading={this.props.loading}
-          initialPlay={this.props.initialPlay}>
+          initialPlay={this.props.initialPlay}
+          config={{
+            buttons: this.props.config.buttons,
+            icons: this.props.config.icons,
+            general: this.props.config.general,
+            skipControls: this.props.config.skipControls
+          }}>
         </VideoViewPlayPause>);
   },
 

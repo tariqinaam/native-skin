@@ -15,6 +15,8 @@ var {
 
 // Uses the rectbutton styles
 var styles = require('../utils').getStyles(require('./style/RectButtonStyles.json'));
+var Utils = require('../utils');
+var Log = require('../log');
 var PLAY = "play";
 var PAUSE = "pause";
 
@@ -35,7 +37,8 @@ var VideoViewPlayPause = React.createClass({
     showButton: React.PropTypes.bool,
     playing: React.PropTypes.bool,
     loading: React.PropTypes.bool,
-    initialPlay: React.PropTypes.bool
+    initialPlay: React.PropTypes.bool,
+    config: React.PropTypes.object,
   },
 
   getInitialState: function() {
@@ -147,7 +150,7 @@ var VideoViewPlayPause = React.createClass({
 
     return (
 
-      <View accessible={false} 
+      <View accessible={false}
          style={[size]}>
         <Animated.Text accessible={false}
           style={[styles.buttonTextStyle, fontStyle, buttonColor, this.props.buttonStyle, animate, opacity]}>
@@ -166,18 +169,21 @@ var VideoViewPlayPause = React.createClass({
     }
   },
 
+  onDismissPress: function(){
+  },
+
   // Gets the play button based on the current config settings
   render: function() {
     var scaleMultiplier = this.props.platform == Constants.PLATFORMS.ANDROID ? 2 : 1 // increase area of play button on android to play scale animation correctly.
     if(this.props.style != null) {
       positionStyle = this.props.style;
-    }
-
-    else if (this.props.position == "center") {
-
+    } else if (this.props.position == "center") {
       var topOffset = Math.round((this.props.frameHeight - this.props.buttonHeight * scaleMultiplier) * 0.5);
-      var leftOffset = Math.round((this.props.frameWidth - this.props.buttonWidth * scaleMultiplier) * 0.5);
-
+      if (this.props.config != undefined && this.props.config.skipControls != undefined) {
+        var leftOffset = Math.round((this.props.frameWidth - this.props.buttonWidth * scaleMultiplier) * 0.25);
+      } else {
+        var leftOffset = Math.round((this.props.frameWidth - this.props.buttonWidth * scaleMultiplier) * 0.5);
+      }
       positionStyle = {
         position: 'absolute', top: topOffset, left: leftOffset
       };
@@ -185,6 +191,18 @@ var VideoViewPlayPause = React.createClass({
       positionStyle = styles[this.props.position];
     }
 
+    var skipButtonSize = 20;
+    if (this.props.config != undefined
+      && this.props.config.skipControls != undefined
+      && this.props.config.skipControls.enabled == true) {
+      var skipBackward = Utils.renderRectButton(BUTTON_NAMES.SKIP_BACKWARD, styles.icon,
+        this.props.config.skipControls.skipBackwardTime.toString(), this.onDismissPress, skipButtonSize,
+        "white", this.props.config.icons.share.fontFamilyName);
+
+      var skipForward = Utils.renderRectButton(BUTTON_NAMES.SKIP_FORWARD, styles.icon,
+          this.props.config.skipControls.skipForwardTime.toString(), this.onDismissPress, skipButtonSize,
+          "white", this.props.config.icons.share.fontFamilyName);
+    }
     var sizeStyle = {width: this.props.buttonWidth, height: this.props.buttonHeight};
     var opacity = {opacity: this.state.widget.animationOpacity};
 
@@ -227,10 +245,16 @@ var VideoViewPlayPause = React.createClass({
           style={[positionStyle]}
           underlayColor="transparent"
           activeOpacity={this.props.opacity}>
-          <View>
-            <Animated.View style={[styles.androidPlayPauseButtonArea, sizeStyle, opacity, {position: 'absolute'}]}>
+          <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between',}}>
+          <Animated.View>
+            {skipBackward}
+          </Animated.View>
+            <Animated.View style={[styles.androidPlayPauseButtonArea, sizeStyle, opacity]}>
               {playButton}
               {pauseButton}
+            </Animated.View>
+            <Animated.View>
+              {skipForward}
             </Animated.View>
           </View>
         </TouchableHighlight>
